@@ -1,5 +1,6 @@
 const buttons = document.querySelectorAll(".btn");
 const inputNumber = document.querySelector("#input-number");
+const displayText = document.querySelector(".display-text");
 const CE = document.querySelector("#CE");
 
 let firstNumber = null;
@@ -55,27 +56,36 @@ const showNumbers = (e) => {
       waitingSecondNumber = false;
     }
     inputNumber.value += e.target.textContent;
+
+    if (operatorSelected === null) {
+      displayText.textContent = "";
+    } else if (waitingSecondNumber) {
+      displayText.textContent = `${firstNumber} ${operatorSelected}`;
+    } else {
+      displayText.textContent = `${firstNumber} ${operatorSelected} ${inputNumber.value}`;
+    }
   } else if (e.target.textContent === "=") {
     let secondNumber = inputNumber.value;
     const resultado = askOperator(operatorSelected, firstNumber, secondNumber);
 
-    inputNumber.value = resultado;
+    inputNumber.value = resultado; //
+  } else if (e.target.textContent === "CE") {
+    displayText.textContent = "";
+    inputNumber.value = 0;
+    firstNumber = null;
+    operatorSelected = null;
+    waitingSecondNumber = false;
   } else {
     firstNumber = inputNumber.value;
     operatorSelected = e.target.textContent;
     waitingSecondNumber = true;
+    displayText.textContent = `${firstNumber} ${operatorSelected}`;
   }
 };
 
 buttons.forEach((e) => {
   e.addEventListener("click", (e) => {
+    1;
     showNumbers(e);
   });
-});
-
-CE.addEventListener("click", () => {
-  inputNumber.value = 0;
-  firstNumber = null;
-  operatorSelected = null;
-  waitingSecondNumber = false;
 });
